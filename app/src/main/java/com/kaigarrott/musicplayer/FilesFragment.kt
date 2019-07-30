@@ -31,7 +31,7 @@ class FilesFragment : Fragment() {
             with(view) {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(context)
-                adapter = FilesAdapter()
+                adapter = FilesAdapter(listOf("these", "are", "some", "fake", "items"))
             }
         }
         return view

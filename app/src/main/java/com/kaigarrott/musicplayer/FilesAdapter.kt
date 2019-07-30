@@ -1,26 +1,29 @@
 package com.kaigarrott.musicplayer
 
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.file_item.view.*
 
 /**
  * Adapter for files view data
  */
-class FilesAdapter () : RecyclerView.Adapter<FilesAdapter.Holder> () {
+class FilesAdapter (private val items: List<String>) : RecyclerView.Adapter<FilesAdapter.Holder> () {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.file_item, parent, false)
+        return Holder(view)
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        holder.textView.text = items[position]
     }
 
-    override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getItemCount(): Int = items.size
 
-    inner class Holder () : RecyclerView.ViewHolder () {
-
+    inner class Holder (view: View) : RecyclerView.ViewHolder (view) {
+        val textView: TextView = view.dummyText
     }
 }
