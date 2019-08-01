@@ -15,8 +15,8 @@
               app:layout_constraintBottom_toTopOf="@+id/controlsFragment"/>
     <fragment
             android:layout_width="match_parent"
-            android:layout_height="0dp" android:name="com.kaigarrott.musicplayer.ControlsFragment"
+            android:layout_height="wrap_content" android:name="com.kaigarrott.musicplayer.ControlsFragment"
             android:id="@+id/controlsFragment"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHeight_percent=".3"/>
+            app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

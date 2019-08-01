@@ -7,10 +7,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.file_item.view.*
 
+import com.kaigarrott.musicplayer.FilesFragment.FilesItemListener
+
 /**
  * Adapter for files view data
  */
-class FilesAdapter (private val items: List<String>) : RecyclerView.Adapter<FilesAdapter.Holder> () {
+class FilesAdapter (private val items: List<String>, private val listener: FilesItemListener) : RecyclerView.Adapter<FilesAdapter.Holder> () {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.file_item, parent, false)

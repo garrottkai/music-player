@@ -1,6 +1,7 @@
 package com.kaigarrott.musicplayer
 
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -20,6 +21,12 @@ class FilesFragment : Fragment() {
     //private lateinit var view: RecyclerView
     //private lateinit var adapter: FilesAdapter
     //private lateinit var manager: RecyclerView.LayoutManager
+    private lateinit var listener: FilesItemListener
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if(context is FilesItemListener) listener = context
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -31,12 +38,14 @@ class FilesFragment : Fragment() {
             with(view) {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(context)
-                adapter = FilesAdapter(listOf("these", "are", "some", "fake", "items"))
+                adapter = FilesAdapter(listOf("these", "are", "some", "fake", "items"), listener)
             }
         }
         return view
     }
 
-
+    interface FilesItemListener {
+        fun onItemSelected(item: String?)
+    }
 
 }
