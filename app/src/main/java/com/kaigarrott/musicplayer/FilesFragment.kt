@@ -21,7 +21,7 @@ class FilesFragment : Fragment() {
     //private lateinit var view: RecyclerView
     //private lateinit var adapter: FilesAdapter
     //private lateinit var manager: RecyclerView.LayoutManager
-    private lateinit var listener: FilesItemListener
+    private var listener: FilesItemListener? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -42,6 +42,11 @@ class FilesFragment : Fragment() {
             }
         }
         return view
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
     }
 
     interface FilesItemListener {

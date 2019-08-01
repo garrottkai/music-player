@@ -12,7 +12,15 @@ import com.kaigarrott.musicplayer.FilesFragment.FilesItemListener
 /**
  * Adapter for files view data
  */
-class FilesAdapter (private val items: List<String>, private val listener: FilesItemListener) : RecyclerView.Adapter<FilesAdapter.Holder> () {
+class FilesAdapter (private val items: List<String>, private val listener: FilesItemListener?) : RecyclerView.Adapter<FilesAdapter.Holder> () {
+
+    private val localListener: View.OnClickListener
+
+    init {
+        localListener = View.OnClickListener { view ->
+            listener?.onItemSelected("foo")
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.file_item, parent, false)
@@ -21,6 +29,7 @@ class FilesAdapter (private val items: List<String>, private val listener: Files
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.textView.text = items[position]
+        holder.textView.setOnClickListener(localListener)
     }
 
     override fun getItemCount(): Int = items.size
