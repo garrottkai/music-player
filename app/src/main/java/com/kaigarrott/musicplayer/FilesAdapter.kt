@@ -5,22 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.file_item.view.*
 
-import com.kaigarrott.musicplayer.FilesFragment.FilesItemListener
 
 /**
  * Adapter for files view data
  */
-class FilesAdapter (private val items: List<String>, private val listener: FilesItemListener?) : RecyclerView.Adapter<FilesAdapter.Holder> () {
-
-    private val localListener: View.OnClickListener
-
-    init {
-        localListener = View.OnClickListener { view ->
-            listener?.onItemSelected("foo")
-        }
-    }
+class FilesAdapter (private val items: List<FilesFragment.FilesItem>, private val listener: FilesFragment.FilesItemListener?) : RecyclerView.Adapter<FilesAdapter.Holder> () {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.file_item, parent, false)
@@ -28,13 +18,16 @@ class FilesAdapter (private val items: List<String>, private val listener: Files
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.textView.text = items[position]
+        val localListener = View.OnClickListener {
+            listener?.onItemSelected(items[holder.adapterPosition])
+        }
+        holder.textView.text = items[position].name
         holder.textView.setOnClickListener(localListener)
     }
 
     override fun getItemCount(): Int = items.size
 
-    inner class Holder (view: View) : RecyclerView.ViewHolder (view) {
-        val textView: TextView = view.dummyText
+    class Holder (view: View) : RecyclerView.ViewHolder (view) {
+        val textView: TextView = view.findViewById(R.id.textName)
     }
 }

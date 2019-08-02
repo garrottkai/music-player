@@ -3,7 +3,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="50dp">
-    <TextView android:id="@+id/dummyText"
+    <TextView android:id="@+id/textName"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"/>
 

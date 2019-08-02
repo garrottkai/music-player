@@ -38,7 +38,7 @@ class FilesFragment : Fragment() {
             with(view) {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(context)
-                adapter = FilesAdapter(listOf("these", "are", "some", "fake", "items"), listener)
+                adapter = FilesAdapter(listOf(FilesItem("these"), FilesItem("are"), FilesItem("some"), FilesItem("fake"), FilesItem("items")), listener)
             }
         }
         return view
@@ -50,7 +50,9 @@ class FilesFragment : Fragment() {
     }
 
     interface FilesItemListener {
-        fun onItemSelected(item: String?)
+        fun onItemSelected(item: FilesItem?)
     }
+
+    class FilesItem(val name: String)
 
 }

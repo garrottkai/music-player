@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity(), FilesFragment.FilesItemListener {
         setContentView(R.layout.activity_main)
     }
 
-    override fun onItemSelected(item: String?) {
-        Toast.makeText(this, item, Toast.LENGTH_LONG).show()
+    override fun onItemSelected(item: FilesFragment.FilesItem?) {
+        Toast.makeText(this, item?.name, Toast.LENGTH_LONG).show()
     }
 }
