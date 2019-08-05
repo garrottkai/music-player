@@ -2,7 +2,6 @@ package com.kaigarrott.musicplayer
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 
 class MainActivity : AppCompatActivity(), FilesFragment.FilesItemListener {
@@ -20,5 +19,9 @@ class MainActivity : AppCompatActivity(), FilesFragment.FilesItemListener {
             filesFragment?.select(item)
             Toast.makeText(this, item.name, Toast.LENGTH_LONG).show()
         }
+    }
+
+    override fun onBackPressed() {
+        filesFragment?.onBackPressed()
     }
 }

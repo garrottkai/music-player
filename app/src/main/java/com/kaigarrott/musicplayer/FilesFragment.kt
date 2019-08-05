@@ -1,6 +1,5 @@
 package com.kaigarrott.musicplayer
 
-
 import android.content.Context
 import android.os.Bundle
 import android.os.Environment
@@ -8,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewManager
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,22 +24,6 @@ class FilesFragment : Fragment() {
     private var adapter: FilesAdapter? = null
     private var listener: FilesItemListener? = null
     private var currentDir: File? = null
-
-    //companion object {
-
-        fun listItems(dir: File): List<FilesItem>? = dir.listFiles()?.map {file -> FilesItem(file.name, file.absolutePath)}
-
-        fun select(item: FilesItem) {
-            val itemFile = File(item.path)
-            if(itemFile.isDirectory) {
-                val items = listItems(itemFile)
-                if(items != null) adapter = FilesAdapter(items, listener)
-                view?.adapter = adapter
-            } else {
-
-            }
-        }
-   // }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -72,10 +54,36 @@ class FilesFragment : Fragment() {
         listener = null
     }
 
+    fun listItems(dir: File): List<FilesItem>? = dir.listFiles()?.map {file -> FilesItem(file.name, file.absolutePath, file.isDirectory)}
+
+    fun select(item: FilesItem) {
+        val itemFile = File(item.path)
+        if(item.isDir) {
+            navigate(itemFile)
+        } else {
+            // TODO start service and play file
+        }
+    }
+
+    fun navigate(dir: File?) {
+       if(dir is File) {
+            currentDir = dir
+            val items = listItems(dir)
+            if(items != null) {
+                adapter = FilesAdapter(items, listener)
+                view?.adapter = adapter
+            }
+        }
+    }
+
+    fun onBackPressed() {
+        navigate(currentDir?.parentFile)
+    }
+
     interface FilesItemListener {
         fun onItemSelected(item: FilesItem?)
     }
 
-    data class FilesItem(val name: String, val path: String)
+    data class FilesItem(val name: String, val path: String, val isDir: Boolean)
 
 }
