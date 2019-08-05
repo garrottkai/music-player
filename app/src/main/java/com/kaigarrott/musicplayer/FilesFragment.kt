@@ -22,6 +22,7 @@ import java.io.File
 class FilesFragment : Fragment() {
 
     private val canRead = Environment.getExternalStorageState() in setOf(Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY)
+    private var view: RecyclerView? = null
     private var adapter: FilesAdapter? = null
     private var listener: FilesItemListener? = null
     private var currentDir: File? = null
@@ -35,6 +36,7 @@ class FilesFragment : Fragment() {
             if(itemFile.isDirectory) {
                 val items = listItems(itemFile)
                 if(items != null) adapter = FilesAdapter(items, listener)
+                view?.adapter = adapter
             } else {
 
             }
@@ -56,13 +58,11 @@ class FilesFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val view = inflater.inflate(R.layout.fragment_files, container, false)
+        view = inflater.inflate(R.layout.fragment_files, container, false) as RecyclerView
         if (view is RecyclerView) {
-            with(view) {
-                setHasFixedSize(true)
-                layoutManager = LinearLayoutManager(context)
-            }
-            view.adapter = adapter
+            view?.setHasFixedSize(true)
+            view?.layoutManager = LinearLayoutManager(context)
+            view?.adapter = adapter
         }
         return view
     }
