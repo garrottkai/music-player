@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewManager
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
@@ -25,15 +26,31 @@ class FilesFragment : Fragment() {
     private var listener: FilesItemListener? = null
     private var currentDir: File? = null
 
+    //companion object {
+
+        fun listItems(dir: File): List<FilesItem>? = dir.listFiles()?.map {file -> FilesItem(file.name, file.absolutePath)}
+
+        fun select(item: FilesItem) {
+            val itemFile = File(item.path)
+            if(itemFile.isDirectory) {
+                val items = listItems(itemFile)
+                if(items != null) adapter = FilesAdapter(items, listener)
+            } else {
+
+            }
+        }
+   // }
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if(context is FilesItemListener) listener = context
         if(canRead) {
-            currentDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-            adapter = FilesAdapter(listFiles(currentDir), listener)
-
+            currentDir = Environment.getRootDirectory()
+            val items = listItems(currentDir!!)
+            if(items != null) adapter = FilesAdapter(items, listener)
         } else {
-            // TODO show alert re: storage access
+            // TODO show better alert re: storage access
+            Toast.makeText(context, "Cant read storage", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -55,12 +72,10 @@ class FilesFragment : Fragment() {
         listener = null
     }
 
-    fun listFiles(dir: File?): List<FilesItem> = dir.listFiles().map {file -> FilesItem(file.name)}
-
     interface FilesItemListener {
         fun onItemSelected(item: FilesItem?)
     }
 
-    class FilesItem(val name: String)
+    data class FilesItem(val name: String, val path: String)
 
 }
