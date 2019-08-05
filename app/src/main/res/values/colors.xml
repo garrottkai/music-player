@@ -8,4 +8,5 @@
     <color name="controlsBackground">#FF2C1C1C</color>
     <color name="buttonColor">#FFFFFFFF</color>
     <color name="buttonBackground">#00FFFFFF</color>
+    <color name="iconColor">#FFFFFFFF</color>
 </resources>

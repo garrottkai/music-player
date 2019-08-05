@@ -3,4 +3,5 @@
     <attr name="controlsBackground" format="reference" />
     <attr name="buttonColor" format="reference" />
     <attr name="buttonBackground" format="reference" />
+    <attr name="iconColor" format="reference" />
 </resources>

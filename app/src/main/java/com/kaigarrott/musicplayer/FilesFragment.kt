@@ -29,7 +29,7 @@ class FilesFragment : Fragment() {
         super.onAttach(context)
         if(context is FilesItemListener) listener = context
         if(canRead) {
-            currentDir = Environment.getRootDirectory()
+            currentDir = Environment.getRootDirectory()//.getExternalStorageDirectory()
             val items = listItems(currentDir!!)
             if(items != null) adapter = FilesAdapter(items, listener)
         } else {
