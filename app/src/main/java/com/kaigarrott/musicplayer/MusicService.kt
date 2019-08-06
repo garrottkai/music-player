@@ -2,8 +2,10 @@ package com.kaigarrott.musicplayer
 
 import android.annotation.TargetApi
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
+import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Binder
@@ -19,7 +21,9 @@ class MusicService : Service(),
     AudioManager.OnAudioFocusChangeListener {
 
     private val binder = LocalBinder()
+    private lateinit var attributes: AudioAttributes
     private lateinit var player: MediaPlayer
+    private lateinit var manager: AudioManager
     private var currentTrack: String? = null
     private var position: Int = 0
 
@@ -45,7 +49,59 @@ class MusicService : Service(),
     }
 
     override fun onAudioFocusChange(focusChange: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        when(focusChange) {
+            AudioManager.AUDIOFOCUS_GAIN -> {
+                if(!this::player.isInitialized) initPlayer()
+                if(!player.isPlaying) player.start()
+                player.setVolume(1.0f, 1.0f)
+            }
+            AudioManager.AUDIOFOCUS_LOSS -> {
+                if(player.isPlaying) player.stop()
+                player.release()
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                if(player.isPlaying) togglePlay()
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
+                if(player.isPlaying) player.setVolume(0.1f, 0.1f)
+            }
+        }
+    }
+
+    @TargetApi(26)
+    private fun requestFocus(): Boolean {
+        manager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val check: Int
+        if(BuildConfig.VERSION_CODE >= Build.VERSION_CODES.O) {
+            val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                .setAudioAttributes(attributes)
+                .setAcceptsDelayedFocusGain(true)
+                .setWillPauseWhenDucked(false)
+                .setOnAudioFocusChangeListener(this)
+                .build()
+            check = manager.requestAudioFocus(request)
+        } else {
+            check = manager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
+        }
+        if(check == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            return true
+        }
+        return false
+    }
+
+    @TargetApi(26)
+    private fun abandonFocus(): Boolean {
+        if(BuildConfig.VERSION_CODE >= Build.VERSION_CODES.O) {
+            val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                .setAudioAttributes(attributes)
+                .setAcceptsDelayedFocusGain(true)
+                .setWillPauseWhenDucked(false)
+                .setOnAudioFocusChangeListener(this)
+                .build()
+            return manager.abandonAudioFocusRequest(request) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+        } else {
+            return manager.abandonAudioFocus(this) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+        }
     }
 
     @TargetApi(21)
@@ -56,7 +112,7 @@ class MusicService : Service(),
         player.setOnCompletionListener(this)
         player.reset()
         if(BuildConfig.VERSION_CODE >= Build.VERSION_CODES.LOLLIPOP) {
-            val attributes = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
+            attributes = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build()
             player.setAudioAttributes(attributes)
